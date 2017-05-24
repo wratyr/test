@@ -11,7 +11,7 @@
 //#define LED1_OFF PORTD &= ~(1 << PD0)
 //#define LED2_ON PORTD |= (1 << PD1)
 //#define LED2_OFF PORTD &= ~(1 << PD1)
-
+//testing
 
 //uint8_t EEMEM count;
 

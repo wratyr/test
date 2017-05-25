@@ -11,6 +11,11 @@
 #include <util/delay.h>
 #include <avr/eeprom.h>
 
+
+#ifndef EEMEM
+#define EEMEM__attribute__ ((section (".eeprom")))
+#endif
+
 //макросы для для удобства написания дальнейшего кода
 //#define LED1_ON PORTD |= (1 << PD0)
 //#define LED1_OFF PORTD &= ~(1 << PD0)
@@ -26,7 +31,11 @@
     0b00000100, //3
     0b00001000 //4
 }; */
-unsigned int test = 0;
+
+uint16_t EEPCount EEMEM = 0;
+uint16_t EEPOil EEMEM = 0;
+unsigned char test = 0;
+unsigned char test2 = 0;
 
 void digit_print(int dig) {
     unsigned char local_count = 0;
@@ -110,8 +119,8 @@ int main(void) {
     //можно выставить пины на асме :
     //PORTD |= (1 << PD2); //включение встроенного ограничительного резистора для порта
 
-    unsigned int count = 0;
-
+ uint16_t count;
+    count = eeprom_read_word(&EEPCount);
     //Проверка при запуске
 
     while (1) {
@@ -119,17 +128,31 @@ int main(void) {
             if (count < 9999) {
                 count++;
                 test = 0;
-
+                eeprom_update_word(&EEPCount, count);
             } else {
                 count = 0;
                 test = 0;
-
             }
 
         } else if ((PINB & (1 << PB0)) == 1) {
             test = 1;
-
         }
+
+
+        if ((PINB & (1 << PB1)) == 0) { //reset
+            count = 0;
+			//eeprom_update_word(&EEPCount, count);
+        }
+		
+		if ((PINB & (1 << PB2)) == 0)
+		{
+			unsigned char menu=1;
+			test2=0;
+			
+		} else if ((PINB & (1 << PB2)) == 1)
+		{
+			test2=1;
+		}
 
         digit_print(count);
 

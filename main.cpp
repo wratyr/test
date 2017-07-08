@@ -119,7 +119,7 @@ int main(void) {
     //можно выставить пины на асме :
     //PORTD |= (1 << PD2); //включение встроенного ограничительного резистора для порта
 
- uint16_t count;
+    uint16_t count;
     count = eeprom_read_word(&EEPCount);
     //Проверка при запуске
 
@@ -128,7 +128,7 @@ int main(void) {
             if (count < 9999) {
                 count++;
                 test = 0;
-                eeprom_update_word(&EEPCount, count);
+                // eeprom_update_word(&EEPCount, count);
             } else {
                 count = 0;
                 test = 0;
@@ -141,18 +141,20 @@ int main(void) {
 
         if ((PINB & (1 << PB1)) == 0) { //reset
             count = 0;
-			//eeprom_update_word(&EEPCount, count);
+            //eeprom_update_word(&EEPCount, count);
         }
-		
-		if ((PINB & (1 << PB2)) == 0)
-		{
-			unsigned char menu=1;
-			test2=0;
-			
-		} else if ((PINB & (1 << PB2)) == 1)
-		{
-			test2=1;
-		}
+
+        if ((PINB & (1 << PB7)) == 0) { //отслеживание пропадания питания
+            eeprom_update_word(&EEPCount, count);//сохраняем текущее значение переменной в энергонезависимую память
+        }
+
+        if ((PINB & (1 << PB2)) == 0) {
+            unsigned char menu = 1;
+            test2 = 0;
+
+        } else if ((PINB & (1 << PB2)) == 1) {
+            test2 = 1;
+        }
 
         digit_print(count);
 

@@ -1,7 +1,8 @@
 MMC_MODEL = atmega8
 MMC_MODEL_AVRDURE = m8
-PROGRAMMER = dasa
-PORT = /dev/ttyS1
+PROGRAMMER = usbasp-clone
+PORT = /dev/ttyS3
+
 
 # Environment AVR
 AVR_DUDE = avrdude
@@ -22,7 +23,7 @@ build: .build-post
 # Add your pre 'build' code here...
 
 .build-post: .build-impl 
-	avr-objcopy -O ihex ${CND_ARTIFACT_PATH_${CONF}} ${CND_ARTIFACT_PATH_${CONF}}.hex
+	avr-objcopy -O ihex -R .eeprom -R .nwram ${CND_ARTIFACT_PATH_${CONF}} ${CND_ARTIFACT_PATH_${CONF}}.hex
 	avr-size --mcu=${MMC_MODEL} -C ${CND_ARTIFACT_PATH_${CONF}}
 # Add your post 'build' code here...
 
